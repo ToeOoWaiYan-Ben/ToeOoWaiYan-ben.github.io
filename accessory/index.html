@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Car Accessories with VAT</title>
+    <link rel="stylesheet" href="css/global.css"> 
+    <style>
+        table {
+            width: 30vw;
+        }
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        table tfoot {
+            font-weight: bold;
+            background-color: beige;
+            color: rgb(33, 33, 37);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Car Accessories</h1>
+
+    <form id="accessoryForm">
+        <label for="accessory">Select an accessory:</label>
+        <select id="accessory">
+            <option value="100">Car Cover</option>
+            <option value="200">Floor Mats</option>
+            <option value="30">Seat Covers</option>
+            <option value="40">Phone Holder</option>
+        </select>
+        <br>
+
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" min="1" value="1">
+        <br>
+
+        <button type="button" onclick="addToProductList()">Add</button>
+    </form>
+    
+    <table id="productList">
+        <thead>
+            <tr>
+                <th>Accessory</th>
+                <th>Amount</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Product list items will be added here dynamically -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">Total Price:</td>
+                <td id="totalPrice">0</td>
+            </tr>
+            <tr>
+                <td colspan="3">VAT Amount (7%):</td>
+                <td id="vatAmount">0</td>
+            </tr>
+            <tr>
+                <td colspan="3">Net Amount:</td>
+                <td id="netAmount">0</td>
+            </tr>
+        </tfoot>    
+    </table>
+
+    <script>
+        var totalPrice = 0;
+        var vatRate = 0.07; // 7% VAT rate
+
+        function addToProductList() {
+            var accessorySelect = document.getElementById("accessory");
+            var accessoryOption = accessorySelect.options[accessorySelect.selectedIndex];
+            var accessoryName = accessoryOption.text;
+            var accessoryPrice = parseFloat(accessoryOption.value);
+            var amountInput = document.getElementById("amount");
+            var amount = parseInt(amountInput.value);
+
+            var productListBody = document.getElementById("productList").getElementsByTagName('tbody')[0];
+            var newRow = productListBody.insertRow();
+
+            var accessoryCell = newRow.insertCell(0);
+            var amountCell = newRow.insertCell(1);
+            var unitPriceCell = newRow.insertCell(2);
+            var totalPriceCell = newRow.insertCell(3);
+
+            accessoryCell.innerHTML = accessoryName;
+            amountCell.innerHTML = amount;
+            unitPriceCell.innerHTML = accessoryPrice.toFixed(2);
+            totalPriceCell.innerHTML = (accessoryPrice * amount).toFixed(2);
+
+            // Update the total price
+            totalPrice += accessoryPrice * amount;
+            document.getElementById("totalPrice").innerHTML = totalPrice.toFixed(2);
+
+            // Calculate VAT and net amount
+            var vatAmount = totalPrice * vatRate;
+            var netAmount = totalPrice + vatAmount;
+
+            document.getElementById("vatAmount").innerHTML = vatAmount.toFixed(2);
+            document.getElementById("netAmount").innerHTML = netAmount.toFixed(2);
+        }
+    </script>
+</body>
+
+</html>
