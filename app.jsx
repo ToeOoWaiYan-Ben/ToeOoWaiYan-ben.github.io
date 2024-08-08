@@ -32,14 +32,14 @@ function App() {
       filterSelectedItem[itemIndex].qty += q;
       filterSelectedItem[itemIndex].total = filterSelectedItem[itemIndex].price * filterSelectedItem[itemIndex].qty;
       filterSelectedItem[itemIndex].discount = d;
-      filterSelectedItem[itemIndex].discountedTotal = filterSelectedItem[itemIndex].total * (1 - d / 100);
+      filterSelectedItem[itemIndex].discountedTotal = filterSelectedItem[itemIndex].total - d;
     } else {
       const newItem = {
         ...product,
         qty: q,
         discount: d,
         total: product.price * q,
-        discountedTotal: product.price * q * (1 - d / 100)
+        discountedTotal: product.price * q - d
       };
       selectedItem.push(newItem);
     }
@@ -79,7 +79,7 @@ function App() {
       itemToRemove.qty = Math.max(itemToRemove.qty - 1, 0);
     }
     itemToRemove.total = itemToRemove.qty * itemToRemove.price;
-    itemToRemove.discountedTotal = itemToRemove.total * (1 - itemToRemove.discount / 100);
+    itemToRemove.discountedTotal = itemToRemove.total - itemToRemove.discount;
 
     if (itemToRemove.qty === 0) {
       updatedItems.splice(index, 1);
@@ -129,12 +129,7 @@ function App() {
     setGrossPrice(0);
     setVatPrice(0);
     setNetPrice(0);
-    setDiscount(0);
     setTotalDiscount(0);
-    pRef.current.value = productList[0].id;
-    qRef.current.value = 1;
-    dRef.current.value = 0;
-    setPrice(productList[0].price);
   };
 
   return (
@@ -167,14 +162,14 @@ function App() {
         </Row>
 
         <Row>
-          <Col xs={1}>Discount (%):</Col> {/* Discount input field */}
+          <Col xs={1}>Discount ($):</Col> {/* Discount input field */}
           <Col>
             <input type="number" ref={dRef} defaultValue={0} onChange={(e) => setDiscount(parseFloat(e.target.value))} />
           </Col>
         </Row>
 
         <Button variant="secondary" onClick={handleAdd}>Add</Button>{' '}
-        <Button variant="danger" onClick={handleClear}>Clear</Button>{' '} {/* Clear button */}
+        <Button variant="danger" onClick={handleClear}>Clear</Button> {/* Clear button */}
 
         <Container style={{ position: "absolute", left: "75%" }}>
           <Row>
@@ -189,13 +184,13 @@ function App() {
         <br></br>
         <Container style={{ position: "relative", top: "70%", left: "80%", fontWeight: 'bold' }}>
           <Row>
-            <Col>Total Cost = $ {totalCost}</Col>
+            <Col>Total Amount = $ {totalCost}</Col>
           </Row>
           <Row>
             <Col>Total Discount = $ {totalDiscount.toFixed(2)}</Col>
           </Row>
           <Row>
-            <Col>Gross Price (after discount) = $ {grossPrice}</Col>
+            <Col>Total Amount (after discount) = $ {grossPrice}</Col>
           </Row>
           <Row>
             <Col>Vat ( 7% ) = $ {vatPrice}</Col>
